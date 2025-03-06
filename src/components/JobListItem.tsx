@@ -26,8 +26,8 @@ const JobListItem: React.FC<JobListItemProps> = ({
   const handleClick = () => {
     navigate(`/jobs/${id}`);
   };
-  return <Card className="mb-3 overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer border-border/40 dark:border-border/30" onClick={handleClick}>
-      <div className="p-4 border-none dark:border-white border-[0.5px] rounded-[20px]">
+  return <Card className="mb-3 overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer border-border/40 dark:border-border/30 rounded-[20px]" onClick={handleClick}>
+      <div className="p-4 border-[0.5px] dark:border-white rounded-[20px]">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <h3 className="font-semibold text-lg mb-1 text-foreground">{title}</h3>
