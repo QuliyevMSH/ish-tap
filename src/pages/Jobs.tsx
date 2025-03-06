@@ -123,7 +123,7 @@ const Jobs: React.FC = () => {
             {loading ? <div className="flex justify-center py-8">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div> : jobs.length > 0 ? jobs.map(job => <JobListItem key={job.id} id={job.id} title={job.title} company={job.company} location={job.location} experience_level={job.experience_level} salary_range={job.salary_range} work_mode={job.work_mode} postedTime={formatDate(job.created_at)} />) : <div className="text-center py-8 text-gray-500">
-                Hələ heç bir iş elanı yoxdur. İlk elanı siz əlavə edin!
+                Hələ heç bir iş elanı yoxdur. <br /> Qeydiyyatdan keçin və ya İlk elanı siz əlavə edin!
               </div>}
           </AnimatedTransition> : <AnimatedTransition key="workers" className="space-y-4">
             <h2 className="text-xl font-semibold mb-4">İş axtaran işçilər (DEMO)</h2>
