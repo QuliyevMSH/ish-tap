@@ -131,7 +131,7 @@ const Profile: React.FC = () => {
     if (!user) {
       toast({
         title: "Giriş edin",
-        description: "Təqib etmək üçün hesabınıza giriş edin",
+        description: "İzləmək üçün hesabınıza giriş edin",
         variant: "destructive",
       });
       navigate('/auth');
@@ -151,13 +151,13 @@ const Profile: React.FC = () => {
             isFollowing: false
           });
           toast({
-            title: "Təqib ləğv edildi",
-            description: "İstifadəçini artıq təqib etmirsiniz",
+            title: "İzləmə ləğv edildi",
+            description: "İstifadəçini artıq izləmirsiniz",
           });
         } else {
           toast({
             title: "Xəta baş verdi",
-            description: result.error || "Təqib ləğv edilmədi",
+            description: result.error || "İzləmə ləğv edilmədi",
             variant: "destructive",
           });
         }
@@ -170,13 +170,13 @@ const Profile: React.FC = () => {
             isFollowing: true
           });
           toast({
-            title: "Təqib edildi",
-            description: "İstifadəçini təqib edirsiniz",
+            title: "İzlənildi",
+            description: "İstifadəçini izləyirsiniz",
           });
         } else {
           toast({
             title: "Xəta baş verdi",
-            description: result.error || "Təqib əlavə olunmadı",
+            description: result.error || "İzləmə alınmadı",
             variant: "destructive",
           });
         }
@@ -185,7 +185,7 @@ const Profile: React.FC = () => {
       console.error("Follow/unfollow error:", error);
       toast({
         title: "Xəta baş verdi",
-        description: "Təqib zamanı xəta baş verdi",
+        description: "İzləmə zamanı xəta baş verdi",
         variant: "destructive",
       });
     } finally {
@@ -304,7 +304,7 @@ const Profile: React.FC = () => {
                     ) : (
                       <UserPlus className="w-4 h-4 mr-2" />
                     )}
-                    {followerStats.isFollowing ? 'Təqib edilir' : 'Təqib et'}
+                    {followerStats.isFollowing ? 'İzlənilir' : 'İzlə'}
                   </Button>
                 )}
                 
