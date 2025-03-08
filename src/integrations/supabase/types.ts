@@ -9,6 +9,27 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      followers: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+          id?: string
+        }
+        Relationships: []
+      }
       job_applicants: {
         Row: {
           created_at: string
@@ -97,6 +118,7 @@ export type Database = {
           profession: string | null
           surname: string | null
           updated_at: string
+          username: string | null
         }
         Insert: {
           about?: string | null
@@ -108,6 +130,7 @@ export type Database = {
           profession?: string | null
           surname?: string | null
           updated_at?: string
+          username?: string | null
         }
         Update: {
           about?: string | null
@@ -119,6 +142,28 @@ export type Database = {
           profession?: string | null
           surname?: string | null
           updated_at?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -163,10 +208,59 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      assign_role: {
+        Args: {
+          target_user_id: string
+          role_name: string
+        }
+        Returns: undefined
+      }
+      get_follower_count: {
+        Args: {
+          user_id: string
+        }
+        Returns: number
+      }
+      get_following_count: {
+        Args: {
+          user_id: string
+        }
+        Returns: number
+      }
+      get_post_count: {
+        Args: {
+          user_id: string
+        }
+        Returns: number
+      }
+      get_user_role: {
+        Args: {
+          user_id: string
+        }
+        Returns: string
+      }
+      is_admin: {
+        Args: {
+          user_id: string
+        }
+        Returns: boolean
+      }
+      is_following: {
+        Args: {
+          follower: string
+          following: string
+        }
+        Returns: boolean
+      }
+      make_admin: {
+        Args: {
+          target_user_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "user" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never

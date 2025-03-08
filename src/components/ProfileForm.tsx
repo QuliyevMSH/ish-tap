@@ -6,15 +6,17 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera, Loader2 } from 'lucide-react';
+import { AlertCircle, Camera, Loader2 } from 'lucide-react';
 import { ProfileService, ProfileType } from '@/services/ProfileService';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 const ProfileForm: React.FC = () => {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<ProfileType>>({
     name: '',
     surname: '',
@@ -22,6 +24,7 @@ const ProfileForm: React.FC = () => {
     about: '',
     phone: '',
     avatar_url: '',
+    username: '',
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -40,6 +43,7 @@ const ProfileForm: React.FC = () => {
               about: profile.about || '',
               phone: profile.phone || '',
               avatar_url: profile.avatar_url || '',
+              username: profile.username || '',
             });
           }
         } catch (err) {
@@ -54,13 +58,66 @@ const ProfileForm: React.FC = () => {
     fetchProfile();
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    
+    if (name === 'username') {
+      // Clear previous errors
+      setUsernameError(null);
+      
+      // Only allow alphanumeric characters and underscores
+      if (!/^[a-zA-Z0-9_]*$/.test(value)) {
+        setUsernameError('İstifadəçi adı yalnız hərf, rəqəm və alt xətt (_) ola bilər');
+        return;
+      }
+      
+      if (value.length > 0 && value.length < 3) {
+        setUsernameError('İstifadəçi adı ən az 3 simvol olmalıdır');
+      }
+      
+      // Check if username already exists (only if it has changed)
+      if (value !== formData.username && value.length >= 3) {
+        try {
+          const { data, error: checkError } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('username', value)
+            .neq('id', user?.id || '')
+            .maybeSingle();
+          
+          if (checkError) throw checkError;
+          
+          if (data) {
+            setUsernameError('Bu istifadəçi adı artıq istifadə olunur');
+            return;
+          }
+        } catch (err) {
+          console.error('Error checking username:', err);
+        }
+      }
+    }
+    
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate username
+    if (!formData.username || formData.username.length < 3) {
+      setUsernameError('İstifadəçi adı ən az 3 simvol olmalıdır');
+      return;
+    }
+    
+    if (usernameError) {
+      toast({
+        title: "Xəta baş verdi",
+        description: "Zəhmət olmasa istifadəçi adını düzəldin",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsLoading(true);
     
     const { success, error } = await ProfileService.updateProfile(formData);
@@ -161,6 +218,24 @@ const ProfileForm: React.FC = () => {
             )}
           </div>
         </div>
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="username">İstifadəçi adı</Label>
+        <Input 
+          id="username" 
+          name="username"
+          value={formData.username || ''}
+          onChange={handleChange}
+          placeholder="İstifadəçi adı" 
+          required
+        />
+        {usernameError && (
+          <div className="text-sm text-red-500 flex items-center mt-1">
+            <AlertCircle className="h-4 w-4 mr-1" />
+            {usernameError}
+          </div>
+        )}
       </div>
       
       <div className="grid grid-cols-2 gap-4">

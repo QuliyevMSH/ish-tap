@@ -14,11 +14,22 @@ import { useEffect, useState } from "react";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import { useIsMobile } from "./hooks/use-mobile";
+import Workers from "./pages/Workers";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+      staleTime: 10000,
+    },
+  },
+});
 
 const App = () => {
   const [isFirstVisit, setIsFirstVisit] = useState(true);
+  const isMobile = useIsMobile();
 
   // Check if this is the first visit
   useEffect(() => {
@@ -32,28 +43,31 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <ThemeProvider>
-          <BrowserRouter>
-            <AuthProvider>
+      <ThemeProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <TooltipProvider>
               <Layout>
-                <Routes>
-                  <Route path="/" element={<Navigate to={isFirstVisit ? "/auth" : "/jobs"} replace />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/jobs" element={<Jobs />} />
-                  <Route path="/jobs/:id" element={<JobDetail />} />
-                  <Route path="/workers/:id" element={<WorkerDetail />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/profile/:userId" element={<Profile />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
+                <div className={isMobile ? "mobile-view" : "web-view"}>
+                  <Routes>
+                    <Route path="/" element={<Navigate to={isFirstVisit ? "/auth" : "/jobs"} replace />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/jobs" element={<Jobs />} />
+                    <Route path="/jobs/:id" element={<JobDetail />} />
+                    <Route path="/workers" element={<Workers />} />
+                    <Route path="/workers/:id" element={<WorkerDetail />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile/:userId" element={<Profile />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </div>
               </Layout>
-            </AuthProvider>
-          </BrowserRouter>
-          <Toaster />
-          <Sonner />
-        </ThemeProvider>
-      </TooltipProvider>
+              <Toaster />
+              <Sonner />
+            </TooltipProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };

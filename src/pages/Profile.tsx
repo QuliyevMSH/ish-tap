@@ -1,20 +1,22 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProfileForm from '@/components/ProfileForm';
 import JobListItem from '@/components/JobListItem';
-import { LogOut, Loader2, Plus, ArrowLeft, MapPin, Phone, Briefcase } from 'lucide-react';
+import { LogOut, Loader2, Plus, ArrowLeft, MapPin, Phone, Briefcase, UserPlus, UserCheck, Users } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { JobService, JobType } from '@/services/JobService';
 import { WorkerService, WorkerType } from '@/services/WorkerService';
 import { ProfileService, ProfileType } from '@/services/ProfileService';
+import { FollowerService, FollowerStats } from '@/services/FollowerService';
 import AddJobDialog from '@/components/AddJobDialog';
 import { useNavigate, useParams } from 'react-router-dom';
 import WorkerListItem from '@/components/WorkerListItem';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import ThemeToggle from '@/components/ThemeToggle';
+import { toast } from '@/components/ui/use-toast';
+import FollowersList from '@/components/FollowersList';
 
 const Profile: React.FC = () => {
   const { signOut, loading: authLoading, user } = useAuth();
@@ -29,6 +31,15 @@ const Profile: React.FC = () => {
   const [profileLoading, setProfileLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isViewingOtherProfile, setIsViewingOtherProfile] = useState(false);
+  const [followerStats, setFollowerStats] = useState<FollowerStats>({
+    followerCount: 0,
+    followingCount: 0,
+    postCount: 0,
+    isFollowing: false
+  });
+  const [followLoading, setFollowLoading] = useState(false);
+  const [followersOpen, setFollowersOpen] = useState(false);
+  const [followingOpen, setFollowingOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -62,6 +73,9 @@ const Profile: React.FC = () => {
           
           const workersData = await WorkerService.getWorkersByUserId(targetUserId);
           setUserWorkers(workersData);
+          
+          const stats = await FollowerService.getFollowerStats(targetUserId);
+          setFollowerStats(stats);
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
@@ -112,6 +126,72 @@ const Profile: React.FC = () => {
     if (userProfile?.avatar_url) return userProfile.avatar_url;
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(userProfile?.name || '')}&surname=${encodeURIComponent(userProfile?.surname || '')}&background=0D8ABC&color=fff`;
   };
+  
+  const handleFollow = async () => {
+    if (!user) {
+      toast({
+        title: "Giriş edin",
+        description: "Təqib etmək üçün hesabınıza giriş edin",
+        variant: "destructive",
+      });
+      navigate('/auth');
+      return;
+    }
+    
+    if (!userId) return;
+    
+    setFollowLoading(true);
+    try {
+      if (followerStats.isFollowing) {
+        const result = await FollowerService.unfollowUser(userId);
+        if (result.success) {
+          setFollowerStats({
+            ...followerStats,
+            followerCount: followerStats.followerCount - 1,
+            isFollowing: false
+          });
+          toast({
+            title: "Təqib ləğv edildi",
+            description: "İstifadəçini artıq təqib etmirsiniz",
+          });
+        } else {
+          toast({
+            title: "Xəta baş verdi",
+            description: result.error || "Təqib ləğv edilmədi",
+            variant: "destructive",
+          });
+        }
+      } else {
+        const result = await FollowerService.followUser(userId);
+        if (result.success) {
+          setFollowerStats({
+            ...followerStats,
+            followerCount: followerStats.followerCount + 1,
+            isFollowing: true
+          });
+          toast({
+            title: "Təqib edildi",
+            description: "İstifadəçini təqib edirsiniz",
+          });
+        } else {
+          toast({
+            title: "Xəta baş verdi",
+            description: result.error || "Təqib əlavə olunmadı",
+            variant: "destructive",
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Follow/unfollow error:", error);
+      toast({
+        title: "Xəta baş verdi",
+        description: "Təqib zamanı xəta baş verdi",
+        variant: "destructive",
+      });
+    } finally {
+      setFollowLoading(false);
+    }
+  };
 
   if (authLoading || !isLoaded) {
     return (
@@ -120,6 +200,8 @@ const Profile: React.FC = () => {
       </div>
     );
   }
+
+  const profileUserId = userId || (user ? user.id : '');
 
   return (
     <div className="page-container pb-20">
@@ -155,59 +237,99 @@ const Profile: React.FC = () => {
         )}
       </div>
 
-      {isViewingOtherProfile && (
-        <Card className="mb-6 animate-fade-in">
-          <CardContent className="pt-6">
-            {profileLoading ? (
-              <div className="flex justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <Card className="mb-6 animate-fade-in">
+        <CardContent className="pt-6">
+          {profileLoading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : userProfile ? (
+            <div className="flex flex-col items-center md:flex-row md:items-start gap-6">
+              <div className="shrink-0">
+                <Avatar className="w-24 h-24 border-2 border-background shadow-md">
+                  <AvatarImage src={getAvatarUrl()} />
+                  <AvatarFallback>{userProfile.name?.charAt(0) || ''}{userProfile.surname?.charAt(0) || ''}</AvatarFallback>
+                </Avatar>
               </div>
-            ) : userProfile ? (
-              <div className="flex flex-col items-center md:flex-row md:items-start gap-6">
-                <div className="shrink-0">
-                  <Avatar className="w-24 h-24 border-2 border-background shadow-md">
-                    <AvatarImage src={getAvatarUrl()} />
-                    <AvatarFallback>{userProfile.name?.charAt(0) || ''}{userProfile.surname?.charAt(0) || ''}</AvatarFallback>
-                  </Avatar>
+              
+              <div className="flex-1 space-y-4">
+                <div>
+                  <h2 className="text-xl font-semibold text-foreground">
+                    {userProfile.name} {userProfile.surname}
+                  </h2>
+                  
+                  {userProfile.username && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      @{userProfile.username}
+                    </p>
+                  )}
+                  
+                  {userProfile.profession && (
+                    <div className="flex items-center text-muted-foreground mt-1">
+                      <Briefcase className="w-4 h-4 mr-2 text-primary" />
+                      <span>{userProfile.profession}</span>
+                    </div>
+                  )}
                 </div>
                 
-                <div className="flex-1 space-y-4">
-                  <div>
-                    <h2 className="text-xl font-semibold text-foreground">
-                      {userProfile.name} {userProfile.surname}
-                    </h2>
-                    
-                    {userProfile.profession && (
-                      <div className="flex items-center text-muted-foreground mt-1">
-                        <Briefcase className="w-4 h-4 mr-2 text-primary" />
-                        <span>{userProfile.profession}</span>
-                      </div>
-                    )}
+                <div className="flex flex-wrap gap-4">
+                  <div 
+                    className="flex items-center cursor-pointer hover:text-primary transition-colors"
+                    onClick={() => setFollowersOpen(true)}
+                  >
+                    <Users className="w-4 h-4 mr-1 text-primary" />
+                    <span className="text-muted-foreground">{followerStats.followerCount} izləyici</span>
                   </div>
-                  
-                  {userProfile.about && (
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground mb-1">Haqqında</h3>
-                      <p className="text-foreground">{userProfile.about}</p>
-                    </div>
-                  )}
-                  
-                  {userProfile.phone && (
-                    <div className="flex items-center text-muted-foreground">
-                      <Phone className="w-4 h-4 mr-2 text-secondary" />
-                      <span>{userProfile.phone}</span>
-                    </div>
-                  )}
+                  <div 
+                    className="flex items-center cursor-pointer hover:text-primary transition-colors"
+                    onClick={() => setFollowingOpen(true)}
+                  >
+                    <UserPlus className="w-4 h-4 mr-1 text-primary" />
+                    <span className="text-muted-foreground">{followerStats.followingCount} izləyir</span>
+                  </div>
                 </div>
+                
+                {isViewingOtherProfile && user && (
+                  <Button 
+                    variant={followerStats.isFollowing ? "secondary" : "default"}
+                    size="sm"
+                    className="mt-2"
+                    onClick={handleFollow}
+                    disabled={followLoading}
+                  >
+                    {followLoading ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : followerStats.isFollowing ? (
+                      <UserCheck className="w-4 h-4 mr-2" />
+                    ) : (
+                      <UserPlus className="w-4 h-4 mr-2" />
+                    )}
+                    {followerStats.isFollowing ? 'Təqib edilir' : 'Təqib et'}
+                  </Button>
+                )}
+                
+                {userProfile.about && (
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">Haqqında</h3>
+                    <p className="text-foreground">{userProfile.about}</p>
+                  </div>
+                )}
+                
+                {userProfile.phone && (
+                  <div className="flex items-center text-muted-foreground">
+                    <Phone className="w-4 h-4 mr-2 text-secondary" />
+                    <span>{userProfile.phone}</span>
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                İstifadəçi profil məlumatları mövcud deyil
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              İstifadəçi profil məlumatları mövcud deyil
+            </div>
+          )}
+        </CardContent>
+      </Card>
       
       <Tabs defaultValue={isViewingOtherProfile ? "jobs" : "profile"} className="animate-fade-in">
         <TabsList className="mb-4 bg-muted/50 dark:bg-muted/30">
@@ -319,6 +441,24 @@ const Profile: React.FC = () => {
           onOpenChange={setDialogOpen} 
           onJobAdded={handleJobAdded}
         />
+      )}
+      
+      {profileUserId && (
+        <>
+          <FollowersList
+            open={followersOpen}
+            onOpenChange={setFollowersOpen}
+            userId={profileUserId}
+            listType="followers"
+          />
+          
+          <FollowersList
+            open={followingOpen}
+            onOpenChange={setFollowingOpen}
+            userId={profileUserId}
+            listType="following"
+          />
+        </>
       )}
     </div>
   );

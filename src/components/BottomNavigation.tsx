@@ -1,48 +1,72 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Briefcase, User } from 'lucide-react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { Home, Briefcase, Settings, User, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
+import SearchDialog from './SearchDialog';
 
 const BottomNavigation: React.FC = () => {
   const location = useLocation();
-  const path = location.pathname;
+  const { user } = useAuth();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/80 dark:bg-background/90 backdrop-blur-lg border-t border-border shadow-lg bottom-safe-area transition-colors duration-300">
-      <div className="flex justify-around items-center h-16 max-w-screen-md mx-auto">
-        <Link
+    <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-background z-50">
+      <nav className="flex justify-around items-center h-16 max-w-screen-lg mx-auto">
+        <NavLink
           to="/jobs"
-          className={cn(
-            "flex flex-col items-center justify-center w-full h-full transition-all duration-200",
-            path === '/jobs' || path.includes('/jobs/') 
-              ? "text-primary" 
-              : "text-muted-foreground hover:text-foreground"
-          )}
+          className={({ isActive }) =>
+            cn(
+              "flex flex-col items-center justify-center space-y-1 px-4 py-2",
+              isActive
+                ? "text-primary"
+                : "text-muted-foreground hover:text-foreground"
+            )
+          }
         >
-          <Briefcase className={cn(
-            "w-6 h-6 mb-1 transition-transform duration-300",
-            (path === '/jobs' || path.includes('/jobs/')) && "scale-110"
-          )} />
-          <span className="text-xs font-medium">İş</span>
-        </Link>
-        
-        <Link
+          <Home className="w-5 h-5" />
+          <span className="text-xs">İşlər</span>
+        </NavLink>
+
+        <NavLink
+          to="/workers"
+          className={({ isActive }) =>
+            cn(
+              "flex flex-col items-center justify-center space-y-1 px-4 py-2",
+              isActive
+                ? "text-primary"
+                : "text-muted-foreground hover:text-foreground"
+            )
+          }
+        >
+          <Briefcase className="w-5 h-5" />
+          <span className="text-xs">İşçilər</span>
+        </NavLink>
+
+        <div className="flex flex-col items-center justify-center space-y-1 px-4 py-2">
+          <SearchDialog trigger={
+            <div className="flex flex-col items-center justify-center cursor-pointer">
+              <Search className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+              <span className="text-xs text-muted-foreground hover:text-foreground">Axtar</span>
+            </div>
+          } />
+        </div>
+
+        <NavLink
           to="/profile"
-          className={cn(
-            "flex flex-col items-center justify-center w-full h-full transition-all duration-200",
-            path === '/profile' || path.includes('/profile/') 
-              ? "text-primary" 
-              : "text-muted-foreground hover:text-foreground"
-          )}
+          className={({ isActive }) =>
+            cn(
+              "flex flex-col items-center justify-center space-y-1 px-4 py-2",
+              isActive
+                ? "text-primary"
+                : "text-muted-foreground hover:text-foreground"
+            )
+          }
         >
-          <User className={cn(
-            "w-6 h-6 mb-1 transition-transform duration-300",
-            (path === '/profile' || path.includes('/profile/')) && "scale-110"
-          )} />
-          <span className="text-xs font-medium">Profilim</span>
-        </Link>
-      </div>
+          <User className="w-5 h-5" />
+          <span className="text-xs">Profil</span>
+        </NavLink>
+      </nav>
     </div>
   );
 };

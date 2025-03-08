@@ -5,26 +5,28 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
-import { WorkerService } from '@/services/WorkerService';
+import { WorkerService, WorkerType } from '@/services/WorkerService';
 import { toast } from '@/components/ui/use-toast';
 
-interface AddWorkerDialogProps {
+interface EditWorkerDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onWorkerAdded: () => void;
+  worker: WorkerType;
+  onWorkerUpdated: () => void;
 }
 
-const AddWorkerDialog: React.FC<AddWorkerDialogProps> = ({ 
+const EditWorkerDialog: React.FC<EditWorkerDialogProps> = ({ 
   open, 
   onOpenChange,
-  onWorkerAdded 
+  worker,
+  onWorkerUpdated,
 }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    surname: '',
-    profession: '',
-    location: '',
-    skills: '', // Will be converted to array when submitting
+    name: worker.name,
+    surname: worker.surname,
+    profession: worker.profession,
+    location: worker.location,
+    skills: worker.skills.join(', '), // Convert skills array to comma-separated string
   });
   const [loading, setLoading] = useState(false);
   
@@ -37,7 +39,7 @@ const AddWorkerDialog: React.FC<AddWorkerDialogProps> = ({
     e.preventDefault();
     
     // Validate required fields
-    if (!formData.name || !formData.surname || !formData.profession || !formData.location || !formData.skills) {
+    if (!formData.name || !formData.surname || !formData.profession || !formData.location) {
       toast({
         title: "Xəta",
         description: "Bütün məcburi sahələri doldurun",
@@ -48,13 +50,12 @@ const AddWorkerDialog: React.FC<AddWorkerDialogProps> = ({
     
     setLoading(true);
     
-    // Convert skills string to array
-    const skillsArray = formData.skills
-      .split(',')
+    // Convert skills string back to array
+    const skillsArray = formData.skills.split(',')
       .map(skill => skill.trim())
       .filter(skill => skill !== '');
     
-    const { success, error } = await WorkerService.addWorker({
+    const { success, error } = await WorkerService.updateWorker(worker.id, {
       name: formData.name,
       surname: formData.surname,
       profession: formData.profession,
@@ -63,26 +64,12 @@ const AddWorkerDialog: React.FC<AddWorkerDialogProps> = ({
     });
     
     if (success) {
-      toast({
-        title: "Uğurlu",
-        description: "İşçi profili uğurla yaradıldı",
-      });
-      
-      // Reset form
-      setFormData({
-        name: '',
-        surname: '',
-        profession: '',
-        location: '',
-        skills: '',
-      });
-      
       onOpenChange(false);
-      onWorkerAdded();
+      onWorkerUpdated();
     } else {
       toast({
         title: "Xəta baş verdi",
-        description: error || "İşçi profili yaradılarkən xəta baş verdi",
+        description: error || "İşçi profili yenilənərkən xəta baş verdi",
         variant: "destructive",
       });
     }
@@ -94,7 +81,7 @@ const AddWorkerDialog: React.FC<AddWorkerDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>İşçi profili əlavə et</DialogTitle>
+          <DialogTitle>İşçi profilini redaktə et</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
@@ -171,9 +158,9 @@ const AddWorkerDialog: React.FC<AddWorkerDialogProps> = ({
               {loading ? (
                 <span className="flex items-center">
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Əlavə edilir...
+                  Yenilənir...
                 </span>
-              ) : 'Əlavə et'}
+              ) : 'Yadda saxla'}
             </Button>
           </DialogFooter>
         </form>
@@ -182,4 +169,4 @@ const AddWorkerDialog: React.FC<AddWorkerDialogProps> = ({
   );
 };
 
-export default AddWorkerDialog;
+export default EditWorkerDialog;

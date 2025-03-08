@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
-import { User, MapPin, Briefcase, ArrowLeft, Loader2, Calendar, Lightbulb } from 'lucide-react';
+import { User, MapPin, Briefcase, ArrowLeft, Loader2, Calendar, Lightbulb, Pencil, Trash2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Badge } from '@/components/ui/badge';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import EditWorkerDialog from '@/components/EditWorkerDialog';
 
 const WorkerDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +19,8 @@ const WorkerDetail: React.FC = () => {
   const [worker, setWorker] = useState<WorkerType | null>(null);
   const [loading, setLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   
   useEffect(() => {
     const fetchWorker = async () => {
@@ -68,6 +72,48 @@ const WorkerDetail: React.FC = () => {
     }
   };
   
+  const handleDelete = async () => {
+    if (!id) return;
+    
+    try {
+      const result = await WorkerService.deleteWorker(id);
+      
+      if (result.success) {
+        toast({
+          title: "Profil silindi",
+          description: "İşçi profili uğurla silindi",
+        });
+        navigate('/profile');
+      } else {
+        toast({
+          title: "Xəta baş verdi",
+          description: result.error || "Profil silinərkən xəta baş verdi",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting worker profile:', error);
+      toast({
+        title: "Xəta baş verdi",
+        description: "Profil silinərkən xəta baş verdi",
+        variant: "destructive",
+      });
+    }
+  };
+  
+  const handleWorkerUpdated = async () => {
+    if (!id) return;
+    
+    const updatedWorker = await WorkerService.getWorkerById(id);
+    if (updatedWorker) {
+      setWorker(updatedWorker);
+      toast({
+        title: "Profil yeniləndi",
+        description: "İşçi profili uğurla yeniləndi",
+      });
+    }
+  };
+  
   if (loading) {
     return (
       <div className="page-container flex justify-center items-center py-12">
@@ -98,6 +144,27 @@ const WorkerDetail: React.FC = () => {
       
       <div className="flex justify-between items-start mb-4">
         <h1 className="text-2xl font-bold">{`${worker.name} ${worker.surname}`}</h1>
+        
+        {isOwner && (
+          <div className="flex space-x-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setEditDialogOpen(true)}
+            >
+              <Pencil className="h-4 w-4 mr-2" />
+              Redaktə et
+            </Button>
+            <Button 
+              variant="destructive" 
+              size="sm"
+              onClick={() => setDeleteDialogOpen(true)}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Sil
+            </Button>
+          </div>
+        )}
       </div>
       
       <Card className="mb-6">
@@ -160,6 +227,34 @@ const WorkerDetail: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>İşçi profilini sil</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bu əməliyyat geri qaytarıla bilməz. İşçi profilinizi silmək istədiyinizə əminsiniz?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Ləğv et</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Sil
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      
+      {/* Edit Worker Dialog */}
+      {worker && editDialogOpen && (
+        <EditWorkerDialog
+          open={editDialogOpen}
+          onOpenChange={setEditDialogOpen}
+          worker={worker}
+          onWorkerUpdated={handleWorkerUpdated}
+        />
+      )}
     </div>
   );
 };

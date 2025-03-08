@@ -92,6 +92,19 @@
   .page-container {
     @apply max-w-screen-md mx-auto px-4 pb-24 pt-2 min-h-screen;
   }
+
+  /* Web-specific container with wider max-width */
+  @screen md {
+    .page-container {
+      @apply max-w-screen-lg px-6;
+    }
+  }
+  
+  @screen lg {
+    .page-container {
+      @apply max-w-screen-xl px-8;
+    }
+  }
   
   .tab-active {
     @apply border-b-2 border-primary text-primary;
@@ -112,4 +125,84 @@
   .shimmer {
     @apply bg-gradient-to-r from-transparent via-white/20 to-transparent bg-[length:200%_100%] animate-shimmer;
   }
+
+  /* Mobile-specific styles */
+  .mobile-card {
+    @apply rounded-lg p-3 mb-3;
+  }
+
+  /* Web-specific styles */
+  @screen md {
+    .web-card {
+      @apply rounded-xl p-5 mb-5 hover:shadow-lg transition-shadow duration-300;
+    }
+  }
+
+  /* Mobile-specific typography */
+  .mobile-heading {
+    @apply text-lg font-semibold;
+  }
+
+  .mobile-subheading {
+    @apply text-sm font-medium;
+  }
+
+  /* Web-specific typography */
+  @screen md {
+    .web-heading {
+      @apply text-2xl font-bold;
+    }
+
+    .web-subheading {
+      @apply text-lg font-medium;
+    }
+  }
+
+  /* Enhanced animations for web only */
+  @screen md {
+    .web-hover-effect {
+      @apply hover:scale-105 transition-transform duration-300;
+    }
+  }
 }
+
+/* Mobile-first layout adjustments */
+.mobile-layout {
+  @apply flex flex-col space-y-3;
+}
+
+/* Web layout adjustments */
+@screen md {
+  .web-layout {
+    @apply grid grid-cols-2 gap-5;
+  }
+
+  .web-layout-wide {
+    @apply grid grid-cols-3 gap-6;
+  }
+}
+
+/* Enhanced mobile interactions */
+.mobile-touch-feedback {
+  @apply active:bg-primary/10 transition-colors duration-150;
+}
+
+/* Enhanced web interactions */
+@screen md {
+  .web-interaction {
+    @apply hover:bg-primary/5 transition-all duration-300;
+  }
+}
+
+/* Mobile optimization for navigation */
+.mobile-nav-item {
+  @apply py-2 px-3 text-sm;
+}
+
+/* Web optimization for navigation */
+@screen md {
+  .web-nav-item {
+    @apply py-3 px-5 text-base;
+  }
+}
+

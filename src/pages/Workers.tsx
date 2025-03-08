@@ -1,17 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
 import TopTabs from '@/components/TopTabs';
-import JobListItem from '@/components/JobListItem';
+import WorkerListItem from '@/components/WorkerListItem';
 import { Button } from '@/components/ui/button';
 import { Plus, RefreshCcw, Loader2, Search } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { JobService, JobType } from '@/services/JobService';
-import AddJobDialog from '@/components/AddJobDialog';
+import { WorkerService, WorkerType } from '@/services/WorkerService';
+import AddWorkerDialog from '@/components/AddWorkerDialog';
 import SearchDialog from '@/components/SearchDialog';
 
-const Jobs: React.FC = () => {
+const Workers: React.FC = () => {
   const { user } = useAuth();
-  const [jobs, setJobs] = useState<JobType[]>([]);
+  const [workers, setWorkers] = useState<WorkerType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -19,27 +19,27 @@ const Jobs: React.FC = () => {
   const [activeTab, setActiveTab] = useState('all');
 
   useEffect(() => {
-    fetchJobs();
+    fetchWorkers();
   }, [activeTab]);
 
-  const fetchJobs = async () => {
+  const fetchWorkers = async () => {
     try {
       setIsLoading(true);
       setError(null);
-      let data: JobType[];
+      let data: WorkerType[];
       
       if (activeTab === 'all') {
-        data = await JobService.getJobs();
+        data = await WorkerService.getWorkers();
       } else if (activeTab === 'my' && user) {
-        data = await JobService.getUserJobs(user.id);
+        data = await WorkerService.getWorkersByUserId(user.id);
       } else {
-        data = await JobService.getJobs();
+        data = await WorkerService.getWorkers();
       }
       
-      setJobs(data);
+      setWorkers(data);
     } catch (error) {
-      console.error("Error fetching jobs:", error);
-      setError("İş elanları yüklənərkən xəta baş verdi.");
+      console.error("Error fetching workers:", error);
+      setError("İşçilər yüklənərkən xəta baş verdi.");
     } finally {
       setIsLoading(false);
     }
@@ -48,16 +48,16 @@ const Jobs: React.FC = () => {
   const handleRefresh = async () => {
     if (isRefreshing) return;
     setIsRefreshing(true);
-    await fetchJobs();
+    await fetchWorkers();
     setIsRefreshing(false);
   };
 
-  const handleAddJob = () => {
+  const handleAddWorker = () => {
     setDialogOpen(true);
   };
 
-  const handleJobAdded = async () => {
-    await fetchJobs();
+  const handleWorkerAdded = async () => {
+    await fetchWorkers();
   };
 
   const handleTabChange = (tabId: string) => {
@@ -65,8 +65,8 @@ const Jobs: React.FC = () => {
   };
 
   const tabs = [
-    { id: 'all', label: 'Bütün elanlar' },
-    { id: 'my', label: 'Mənim elanlarım' }
+    { id: 'all', label: 'Bütün işçilər' },
+    { id: 'my', label: 'Mənim profillərim' }
   ];
 
   const formatDate = (dateString: string) => {
@@ -92,7 +92,7 @@ const Jobs: React.FC = () => {
         <div className="text-center mb-6">
           <p className="text-red-500 mb-4">{error}</p>
           <Button 
-            onClick={fetchJobs} 
+            onClick={fetchWorkers} 
             variant="outline"
             className="flex items-center gap-2"
           >
@@ -107,17 +107,17 @@ const Jobs: React.FC = () => {
   return (
     <div className="page-container pb-20">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">İş elanları</h1>
+        <h1 className="text-2xl font-bold">İşçilər</h1>
         <div className="flex items-center gap-2">
           <SearchDialog className="text-muted-foreground hover:text-foreground" />
           {user && (
             <Button 
               size="sm" 
-              onClick={handleAddJob}
+              onClick={handleAddWorker}
               className="flex items-center"
             >
               <Plus className="w-4 h-4 mr-1" />
-              Yeni elan
+              İşçi profili yarat
             </Button>
           )}
         </div>
@@ -133,35 +133,33 @@ const Jobs: React.FC = () => {
         <div className="flex justify-center py-12">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
-      ) : jobs.length > 0 ? (
+      ) : workers.length > 0 ? (
         <div className="space-y-4 mt-4">
-          {jobs.map((job) => (
-            <JobListItem 
-              key={job.id}
-              id={job.id}
-              title={job.title}
-              company={job.company}
-              location={job.location}
-              experience_level={job.experience_level}
-              salary_range={job.salary_range}
-              work_mode={job.work_mode}
-              postedTime={formatDate(job.created_at)}
+          {workers.map((worker) => (
+            <WorkerListItem 
+              key={worker.id}
+              id={worker.id}
+              name={`${worker.name} ${worker.surname}`}
+              profession={worker.profession}
+              skills={worker.skills}
+              location={worker.location}
+              postedTime={formatDate(worker.created_at)}
             />
           ))}
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-lg text-muted-foreground mb-4">Hal-hazırda aktiv iş elanı yoxdur</p>
+          <p className="text-lg text-muted-foreground mb-4">Hal-hazırda aktiv işçi profili yoxdur</p>
           {user && (
-            <Button onClick={handleAddJob}>
+            <Button onClick={handleAddWorker}>
               <Plus className="w-4 h-4 mr-2" />
-              İş elanı əlavə et
+              İşçi profili yarat
             </Button>
           )}
         </div>
       )}
 
-      {!isLoading && jobs.length > 0 && (
+      {!isLoading && workers.length > 0 && (
         <div className="flex justify-center mt-6">
           <Button 
             variant="outline" 
@@ -179,13 +177,13 @@ const Jobs: React.FC = () => {
         </div>
       )}
 
-      <AddJobDialog 
+      <AddWorkerDialog 
         open={dialogOpen} 
         onOpenChange={setDialogOpen} 
-        onJobAdded={handleJobAdded}
+        onWorkerAdded={handleWorkerAdded}
       />
     </div>
   );
 };
 
-export default Jobs;
+export default Workers;

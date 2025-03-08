@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -9,15 +8,25 @@ import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { JobService } from '@/services/JobService';
 import { toast } from '@/components/ui/use-toast';
-
 interface AddJobDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onJobAdded: () => void;
 }
-
-const AddJobDialog: React.FC<AddJobDialogProps> = ({ open, onOpenChange, onJobAdded }) => {
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
+const AddJobDialog: React.FC<AddJobDialogProps> = ({
+  open,
+  onOpenChange,
+  onJobAdded
+}) => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: {
+      errors,
+      isSubmitting
+    }
+  } = useForm({
     defaultValues: {
       title: '',
       company: '',
@@ -27,10 +36,9 @@ const AddJobDialog: React.FC<AddJobDialogProps> = ({ open, onOpenChange, onJobAd
       salary_range: '',
       work_mode: '',
       contact_info: '',
-      application_form: '',
+      application_form: ''
     }
   });
-
   const onSubmit = async (data: {
     title: string;
     company: string;
@@ -44,11 +52,10 @@ const AddJobDialog: React.FC<AddJobDialogProps> = ({ open, onOpenChange, onJobAd
   }) => {
     try {
       const result = await JobService.addJob(data);
-      
       if (result.success) {
         toast({
           title: "İş əlavə edildi",
-          description: "İş elanı uğurla əlavə edildi",
+          description: "İş elanı uğurla əlavə edildi"
         });
         reset();
         onOpenChange(false);
@@ -57,7 +64,7 @@ const AddJobDialog: React.FC<AddJobDialogProps> = ({ open, onOpenChange, onJobAd
         toast({
           title: "Xəta baş verdi",
           description: result.error || "İş əlavə edilərkən xəta baş verdi",
-          variant: "destructive",
+          variant: "destructive"
         });
       }
     } catch (error) {
@@ -65,13 +72,11 @@ const AddJobDialog: React.FC<AddJobDialogProps> = ({ open, onOpenChange, onJobAd
       toast({
         title: "Xəta baş verdi",
         description: "İş əlavə edilərkən xəta baş verdi",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+  return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Yeni iş elanı əlavə et</DialogTitle>
@@ -79,108 +84,68 @@ const AddJobDialog: React.FC<AddJobDialogProps> = ({ open, onOpenChange, onJobAd
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="title">Vəzifə adı</Label>
-            <Input
-              id="title"
-              placeholder="Məs: Web Proqramçı"
-              {...register('title', { required: 'Vəzifə adı tələb olunur' })}
-            />
-            {errors.title && (
-              <p className="text-sm text-red-500">{errors.title.message}</p>
-            )}
+            <Input id="title" placeholder="Məs: Web Proqramçı" {...register('title', {
+            required: 'Vəzifə adı tələb olunur'
+          })} />
+            {errors.title && <p className="text-sm text-red-500">{errors.title.message}</p>}
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="company">Şirkət</Label>
-            <Input
-              id="company"
-              placeholder="Məs: Tech Solutions LLC"
-              {...register('company', { required: 'Şirkət adı tələb olunur' })}
-            />
-            {errors.company && (
-              <p className="text-sm text-red-500">{errors.company.message}</p>
-            )}
+            <Input id="company" placeholder="Məs: Tech Solutions LLC" {...register('company', {
+            required: 'Şirkət adı tələb olunur'
+          })} />
+            {errors.company && <p className="text-sm text-red-500">{errors.company.message}</p>}
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="location">Məkan</Label>
-            <Input
-              id="location"
-              placeholder="Məs: Bakı"
-              {...register('location', { required: 'Məkan tələb olunur' })}
-            />
-            {errors.location && (
-              <p className="text-sm text-red-500">{errors.location.message}</p>
-            )}
+            <Input id="location" placeholder="Məs: Bakı" {...register('location', {
+            required: 'Məkan tələb olunur'
+          })} />
+            {errors.location && <p className="text-sm text-red-500">{errors.location.message}</p>}
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="requirements">İşin tələbləri</Label>
-            <Textarea
-              id="requirements"
-              placeholder="Məs: HTML, CSS, JavaScript bilgisi"
-              {...register('requirements')}
-            />
+            <Textarea id="requirements" placeholder="Məs: HTML, CSS, JavaScript bilgisi" {...register('requirements')} />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="experience_level">Təcrübə səviyyəsi</Label>
-            <Input
-              id="experience_level"
-              placeholder="Məs: 1-3 il"
-              {...register('experience_level')}
-            />
+            <Input id="experience_level" placeholder="Məs: 1-3 il" {...register('experience_level')} />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="salary_range">Maaş aralığı</Label>
-            <Input
-              id="salary_range"
-              placeholder="Məs: 1500-2000 AZN"
-              {...register('salary_range')}
-            />
+            <Input id="salary_range" placeholder="Məs: 1500-2000 AZN" {...register('salary_range')} />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="work_mode">İş rejimi</Label>
-            <Input
-              id="work_mode"
-              placeholder="Məs: Hibrid, Remote, Ofis"
-              {...register('work_mode')}
-            />
+            <Input id="work_mode" placeholder="Məs: Hibrid, Remote, Ofis" {...register('work_mode')} />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="contact_info">Əlaqə məlumatları</Label>
-            <Input
-              id="contact_info"
-              placeholder="Məs: email@example.com, +994 50 123 45 67"
-              {...register('contact_info')}
-            />
+            <Input id="contact_info" placeholder="Məs: email@example.com, +994 50 123 45 67" {...register('contact_info')} />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="application_form">Müraciət forması</Label>
-            <Textarea
-              id="application_form"
-              placeholder="Məs: CV-nizi göndərin email@example.com ünvanına"
-              {...register('application_form')}
-            />
+            <Textarea id="application_form" placeholder="Məs: CV-nizi göndərin email@example.com ünvanına" {...register('application_form')} />
           </div>
           
           <DialogFooter>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
+              {isSubmitting ? <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" /> 
                   Əlavə edilir...
-                </>
-              ) : 'Əlavə et'}
+                </> : 'Əlavə et'}
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 };
-
 export default AddJobDialog;

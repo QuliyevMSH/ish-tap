@@ -9,6 +9,7 @@ export type ProfileType = {
   about: string | null;
   phone: string | null;
   avatar_url: string | null;
+  username: string | null;
 };
 
 export const ProfileService = {
@@ -61,6 +62,25 @@ export const ProfileService = {
       const { data: user } = await supabase.auth.getUser();
       
       if (!user.user) return { success: false, error: 'User not authenticated' };
+      
+      // Check if username is already taken (by another user)
+      if (profile.username) {
+        const { data: existingUser, error: checkError } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('username', profile.username)
+          .neq('id', user.user.id)
+          .maybeSingle();
+        
+        if (checkError) throw checkError;
+        
+        if (existingUser) {
+          return { 
+            success: false, 
+            error: 'Bu istifadəçi adı artıq istifadə olunur' 
+          };
+        }
+      }
       
       const { error } = await supabase
         .from('profiles')

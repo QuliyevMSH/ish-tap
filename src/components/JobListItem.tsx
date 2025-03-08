@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { Briefcase, Clock, MapPin, DollarSign, Clock3, Building } from 'lucide-react';
+import { Briefcase, Clock, MapPin, DollarSign, Clock3, Building, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
 interface JobListItemProps {
   id: string;
   title: string;
@@ -11,7 +13,10 @@ interface JobListItemProps {
   salary_range?: string;
   work_mode?: string;
   postedTime: string;
+  postedBy?: string;
+  userId?: string;
 }
+
 const JobListItem: React.FC<JobListItemProps> = ({
   id,
   title,
@@ -20,14 +25,26 @@ const JobListItem: React.FC<JobListItemProps> = ({
   experience_level,
   salary_range,
   work_mode,
-  postedTime
+  postedTime,
+  postedBy,
+  userId
 }) => {
   const navigate = useNavigate();
+  
   const handleClick = () => {
     navigate(`/jobs/${id}`);
   };
-  return <Card className="mb-3 overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer border-border/40 dark:border-border/30 rounded-[20px]" onClick={handleClick}>
-      <div className="p-4 border-[0.5px] dark:border-white rounded-[20px]">
+  
+  const handleUserClick = (e: React.MouseEvent) => {
+    if (userId) {
+      e.stopPropagation();
+      navigate(`/profile/${userId}`);
+    }
+  };
+
+  return (
+    <Card onClick={handleClick} className="mb-3 overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer border-border/40 dark:border-border/30 rounded-[20px]">
+      <div className="p-4 dark:border-white border-[0.5px] rounded-[20px]">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <h3 className="font-semibold text-lg mb-1 text-foreground">{title}</h3>
@@ -39,25 +56,43 @@ const JobListItem: React.FC<JobListItemProps> = ({
                 <span>{location}</span>
               </div>
               
-              {experience_level && <div className="flex items-center text-muted-foreground text-sm">
+              {experience_level && (
+                <div className="flex items-center text-muted-foreground text-sm">
                   <Building className="w-4 h-4 mr-1 text-primary" />
                   <span>{experience_level}</span>
-                </div>}
+                </div>
+              )}
               
-              {salary_range && <div className="flex items-center text-muted-foreground text-sm">
+              {salary_range && (
+                <div className="flex items-center text-muted-foreground text-sm">
                   <DollarSign className="w-4 h-4 mr-1 text-accent-foreground" />
                   <span>{salary_range}</span>
-                </div>}
+                </div>
+              )}
               
-              {work_mode && <div className="flex items-center text-muted-foreground text-sm">
+              {work_mode && (
+                <div className="flex items-center text-muted-foreground text-sm">
                   <Clock3 className="w-4 h-4 mr-1 text-secondary" />
                   <span>{work_mode}</span>
-                </div>}
+                </div>
+              )}
             </div>
             
-            <div className="flex items-center text-muted-foreground text-sm">
-              <Clock className="w-4 h-4 mr-1" />
-              <span>{postedTime}</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center text-muted-foreground text-sm">
+                <Clock className="w-4 h-4 mr-1" />
+                <span>{postedTime}</span>
+              </div>
+              
+              {postedBy && userId && (
+                <div 
+                  className="flex items-center text-sm text-primary hover:text-primary/80 cursor-pointer" 
+                  onClick={handleUserClick}
+                >
+                  <User className="w-4 h-4 mr-1" />
+                  <span>{postedBy}</span>
+                </div>
+              )}
             </div>
           </div>
           
@@ -66,6 +101,8 @@ const JobListItem: React.FC<JobListItemProps> = ({
           </div>
         </div>
       </div>
-    </Card>;
+    </Card>
+  );
 };
+
 export default JobListItem;

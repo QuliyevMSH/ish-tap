@@ -5,34 +5,73 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/AuthContext';
+import { AlertCircle } from 'lucide-react';
 
 type AuthMode = 'login' | 'register';
 
 const AuthForm: React.FC = () => {
   const [mode, setMode] = useState<AuthMode>('login');
   const { signIn, signUp, loading } = useAuth();
+  const [usernameError, setUsernameError] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
     name: '',
     surname: '',
+    username: '',
     email: '',
     password: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    
+    if (name === 'username') {
+      // Clear previous errors
+      setUsernameError(null);
+      
+      // Only allow alphanumeric characters and underscores
+      if (!/^[a-zA-Z0-9_]*$/.test(value)) {
+        setUsernameError('İstifadəçi adı yalnız hərf, rəqəm və alt xətt (_) ola bilər');
+      }
+    }
+    
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const validateForm = () => {
+    if (mode === 'register') {
+      if (!formData.username.trim()) {
+        setUsernameError('İstifadəçi adı mütləq olmalıdır');
+        return false;
+      }
+      
+      if (formData.username.length < 3) {
+        setUsernameError('İstifadəçi adı ən az 3 simvol olmalıdır');
+        return false;
+      }
+      
+      if (usernameError) {
+        return false;
+      }
+    }
+    
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
     
     if (mode === 'login') {
       await signIn(formData.email, formData.password);
     } else {
       await signUp(formData.email, formData.password, {
         name: formData.name,
-        surname: formData.surname
+        surname: formData.surname,
+        username: formData.username
       });
     }
   };
@@ -69,6 +108,23 @@ const AuthForm: React.FC = () => {
                   placeholder="Soyadınızı daxil edin" 
                   required 
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="username">İstifadəçi adı</Label>
+                <Input 
+                  id="username" 
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  placeholder="İstifadəçi adınızı daxil edin" 
+                  required 
+                />
+                {usernameError && (
+                  <div className="text-sm text-red-500 flex items-center mt-1">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    {usernameError}
+                  </div>
+                )}
               </div>
             </>
           )}

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +9,7 @@ type AuthContextType = {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, userData: { name: string; surname: string }) => Promise<void>;
+  signUp: (email: string, password: string, userData: { name: string; surname: string; username: string }) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -24,20 +23,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const setData = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) {
-        console.error(error);
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("Session error:", error);
+          setLoading(false);
+          return;
+        }
+        
+        setSession(session);
+        setUser(session?.user ?? null);
+      } catch (error) {
+        console.error("Error in setData:", error);
+      } finally {
+        setLoading(false);
       }
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
+      async (_event, session) => {
+        try {
+          setSession(session);
+          setUser(session?.user ?? null);
+        } catch (error) {
+          console.error("Error in auth state change:", error);
+        } finally {
+          setLoading(false);
+        }
       }
     );
 
@@ -71,9 +83,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signUp = async (email: string, password: string, userData: { name: string; surname: string }) => {
+  const signUp = async (email: string, password: string, userData: { name: string; surname: string; username: string }) => {
     try {
       setLoading(true);
+      
+      const { data: existingUsers, error: checkError } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('username', userData.username)
+        .maybeSingle();
+      
+      if (checkError) {
+        throw new Error("İstifadəçi adını yoxlayarkən xəta baş verdi");
+      }
+      
+      if (existingUsers) {
+        throw new Error("Bu istifadəçi adı artıq istifadə olunur");
+      }
+      
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -81,12 +108,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           data: {
             name: userData.name,
             surname: userData.surname,
+            username: userData.username,
           },
         },
       });
+      
       if (error) {
         throw error;
       }
+      
       toast({
         title: "Qeydiyyat tamamlandı",
         description: "Hesabınız uğurla yaradıldı",

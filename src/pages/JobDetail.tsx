@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { JobService, JobType } from '@/services/JobService';
@@ -6,13 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
-import { Edit, Trash2, Briefcase, MapPin, Building, DollarSign, Clock3, Phone, FileText, ArrowLeft, Loader2, Calendar, Heart } from 'lucide-react';
+import { Edit, Trash2, Briefcase, MapPin, Building, DollarSign, Clock3, Phone, FileText, ArrowLeft, Loader2, Calendar, Heart, User } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import EditJobDialog from '@/components/EditJobDialog';
 import DeleteJobDialog from '@/components/DeleteJobDialog';
 import { JobApplicantService } from '@/services/JobApplicantService';
 import JobApplicants from '@/components/JobApplicants';
 import { ProfileService, ProfileType } from '@/services/ProfileService';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const JobDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,6 +27,7 @@ const JobDetail: React.FC = () => {
   const [isApplied, setIsApplied] = useState(false);
   const [showAllApplicants, setShowAllApplicants] = useState(false);
   const [applicantsLoading, setApplicantsLoading] = useState(true);
+  const [posterProfile, setPosterProfile] = useState<ProfileType | null>(null);
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -37,6 +38,12 @@ const JobDetail: React.FC = () => {
       
       if (jobData) {
         setJob(jobData);
+        
+        // Fetch poster's profile
+        if (jobData.user_id) {
+          const profile = await ProfileService.getProfileById(jobData.user_id);
+          setPosterProfile(profile);
+        }
         
         // Check if current user is the owner of the job
         if (user && user.id === jobData.user_id) {
@@ -94,7 +101,6 @@ const JobDetail: React.FC = () => {
     }
   }, [id, user, navigate]);
 
-  // Additional fetch when user auth state changes
   useEffect(() => {
     if (job && user) {
       setIsOwner(user.id === job.user_id);
@@ -196,6 +202,12 @@ const JobDetail: React.FC = () => {
     }
   };
   
+  const navigateToUserProfile = () => {
+    if (job?.user_id) {
+      navigate(`/profile/${job.user_id}`);
+    }
+  };
+
   if (loading) {
     return (
       <div className="page-container flex justify-center items-center py-12">
@@ -226,7 +238,24 @@ const JobDetail: React.FC = () => {
       
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
-          <h1 className="text-2xl font-bold">{job.title}</h1>
+          <h1 className="text-2xl font-bold">{job?.title}</h1>
+          
+          {posterProfile && (
+            <div 
+              className="flex items-center mt-2 cursor-pointer hover:text-primary transition-colors"
+              onClick={navigateToUserProfile}
+            >
+              <Avatar className="w-6 h-6 mr-2">
+                <AvatarImage 
+                  src={posterProfile.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(posterProfile.name || '')}&surname=${encodeURIComponent(posterProfile.surname || '')}&background=0D8ABC&color=fff`} 
+                />
+                <AvatarFallback>{posterProfile.name?.charAt(0) || ''}{posterProfile.surname?.charAt(0) || ''}</AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium underline">
+                {posterProfile.name} {posterProfile.surname}
+              </span>
+            </div>
+          )}
           
           <div className="flex items-center space-x-4 mt-2">
             {!isOwner && (
@@ -290,32 +319,32 @@ const JobDetail: React.FC = () => {
                 <div className="space-y-3">
                   <div className="flex items-center">
                     <Building className="h-5 w-5 mr-2 text-gray-500" />
-                    <span className="font-medium">{job.company}</span>
+                    <span className="font-medium">{job?.company}</span>
                   </div>
                   
                   <div className="flex items-center">
                     <MapPin className="h-5 w-5 mr-2 text-gray-500" />
-                    <span>{job.location}</span>
+                    <span>{job?.location}</span>
                   </div>
                   
                   <div className="flex items-center">
                     <Briefcase className="h-5 w-5 mr-2 text-gray-500" />
-                    <span>Təcrübə: {job.experience_level || "Göstərilməyib"}</span>
+                    <span>Təcrübə: {job?.experience_level || "Göstərilməyib"}</span>
                   </div>
                   
                   <div className="flex items-center">
                     <DollarSign className="h-5 w-5 mr-2 text-gray-500" />
-                    <span>Maaş: {job.salary_range || "Göstərilməyib"}</span>
+                    <span>Maaş: {job?.salary_range || "Göstərilməyib"}</span>
                   </div>
                   
                   <div className="flex items-center">
                     <Clock3 className="h-5 w-5 mr-2 text-gray-500" />
-                    <span>İş rejimi: {job.work_mode || "Göstərilməyib"}</span>
+                    <span>İş rejimi: {job?.work_mode || "Göstərilməyib"}</span>
                   </div>
                   
                   <div className="flex items-center">
                     <Calendar className="h-5 w-5 mr-2 text-gray-500" />
-                    <span>Tarix: {formatDate(job.created_at)}</span>
+                    <span>Tarix: {formatDate(job?.created_at)}</span>
                   </div>
                 </div>
               </div>
@@ -323,7 +352,7 @@ const JobDetail: React.FC = () => {
               <div className="mb-6">
                 <h2 className="text-lg font-semibold mb-2">Tələblər</h2>
                 <Separator className="mb-3" />
-                <p className="whitespace-pre-line">{job.requirements || "Tələblər göstərilməyib"}</p>
+                <p className="whitespace-pre-line">{job?.requirements || "Tələblər göstərilməyib"}</p>
               </div>
             </div>
             
@@ -333,7 +362,7 @@ const JobDetail: React.FC = () => {
                 <Separator className="mb-3" />
                 <div className="flex items-start">
                   <Phone className="h-5 w-5 mr-2 text-gray-500 mt-0.5" />
-                  <p className="whitespace-pre-line">{job.contact_info || "Əlaqə məlumatları göstərilməyib"}</p>
+                  <p className="whitespace-pre-line">{job?.contact_info || "Əlaqə məlumatları göstərilməyib"}</p>
                 </div>
               </div>
               
@@ -342,7 +371,7 @@ const JobDetail: React.FC = () => {
                 <Separator className="mb-3" />
                 <div className="flex items-start">
                   <FileText className="h-5 w-5 mr-2 text-gray-500 mt-0.5" />
-                  <p className="whitespace-pre-line">{job.application_form || "Müraciət qaydası göstərilməyib"}</p>
+                  <p className="whitespace-pre-line">{job?.application_form || "Müraciət qaydası göstərilməyib"}</p>
                 </div>
               </div>
               
@@ -350,7 +379,7 @@ const JobDetail: React.FC = () => {
                 <h2 className="text-lg font-semibold mb-2">Elan məlumatları</h2>
                 <Separator className="mb-3" />
                 <p className="text-sm text-gray-500">
-                  Paylaşılma tarixi: {formatDate(job.created_at)}
+                  Paylaşılma tarixi: {formatDate(job?.created_at)}
                 </p>
               </div>
             </div>
