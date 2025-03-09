@@ -17,6 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import ThemeToggle from '@/components/ThemeToggle';
 import { toast } from '@/components/ui/use-toast';
 import FollowersList from '@/components/FollowersList';
+import SendMessageButton from '@/components/SendMessageButton';
 
 const Profile: React.FC = () => {
   const { signOut, loading: authLoading, user } = useAuth();
@@ -289,24 +290,29 @@ const Profile: React.FC = () => {
                   </div>
                 </div>
                 
-                {isViewingOtherProfile && user && (
-                  <Button 
-                    variant={followerStats.isFollowing ? "secondary" : "default"}
-                    size="sm"
-                    className="mt-2"
-                    onClick={handleFollow}
-                    disabled={followLoading}
-                  >
-                    {followLoading ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : followerStats.isFollowing ? (
-                      <UserCheck className="w-4 h-4 mr-2" />
-                    ) : (
-                      <UserPlus className="w-4 h-4 mr-2" />
-                    )}
-                    {followerStats.isFollowing ? 'İzlənilir' : 'İzlə'}
-                  </Button>
-                )}
+                <div className="flex flex-wrap gap-2">
+                  {isViewingOtherProfile && user && (
+                    <>
+                      <Button 
+                        variant={followerStats.isFollowing ? "secondary" : "default"}
+                        size="sm"
+                        onClick={handleFollow}
+                        disabled={followLoading}
+                      >
+                        {followLoading ? (
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        ) : followerStats.isFollowing ? (
+                          <UserCheck className="w-4 h-4 mr-2" />
+                        ) : (
+                          <UserPlus className="w-4 h-4 mr-2" />
+                        )}
+                        {followerStats.isFollowing ? 'İzlənilir' : 'İzlə'}
+                      </Button>
+                      
+                      {userId && <SendMessageButton userId={userId} />}
+                    </>
+                  )}
+                </div>
                 
                 {userProfile.about && (
                   <div>

@@ -9,6 +9,53 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      conversation_participants: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_participants_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversations: {
+        Row: {
+          created_at: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       followers: {
         Row: {
           created_at: string
@@ -106,6 +153,44 @@ export type Database = {
           work_mode?: string | null
         }
         Relationships: []
+      }
+      messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          read: boolean
+          sender_id: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          sender_id: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          sender_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -215,6 +300,13 @@ export type Database = {
         }
         Returns: undefined
       }
+      get_conversation_other_participant: {
+        Args: {
+          conversation_id: string
+          current_user_id: string
+        }
+        Returns: string
+      }
       get_follower_count: {
         Args: {
           user_id: string
@@ -226,6 +318,13 @@ export type Database = {
           user_id: string
         }
         Returns: number
+      }
+      get_or_create_conversation: {
+        Args: {
+          user1_id: string
+          user2_id: string
+        }
+        Returns: string
       }
       get_post_count: {
         Args: {
@@ -241,6 +340,13 @@ export type Database = {
       }
       is_admin: {
         Args: {
+          user_id: string
+        }
+        Returns: boolean
+      }
+      is_conversation_participant: {
+        Args: {
+          conversation_id: string
           user_id: string
         }
         Returns: boolean
