@@ -92,7 +92,7 @@ const AddJobDialog: React.FC<AddJobDialogProps> = ({
           
           <div className="space-y-2">
             <Label htmlFor="company">Şirkət</Label>
-            <Input id="company" placeholder="Məs: Tech Solutions LLC" {...register('company', {
+            <Input id="company" placeholder="Məs: Tech Solutions LLC və ya Şəxsi" {...register('company', {
             required: 'Şirkət adı tələb olunur'
           })} />
             {errors.company && <p className="text-sm text-red-500">{errors.company.message}</p>}
@@ -108,32 +108,32 @@ const AddJobDialog: React.FC<AddJobDialogProps> = ({
           
           <div className="space-y-2">
             <Label htmlFor="requirements">İşin tələbləri</Label>
-            <Textarea id="requirements" placeholder="Məs: HTML, CSS, JavaScript bilgisi" {...register('requirements')} />
+            <Textarea id="requirements" placeholder="İş üçün tələb olunan bacarıqlar, təhsil və s." {...register('requirements')} />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="experience_level">Təcrübə səviyyəsi</Label>
-            <Input id="experience_level" placeholder="Məs: 1-3 il" {...register('experience_level')} />
+            <Input id="experience_level" placeholder="Məs: 1-3 il, Junior, Senior və s." {...register('experience_level')} />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="salary_range">Maaş aralığı</Label>
-            <Input id="salary_range" placeholder="Məs: 1500-2000 AZN" {...register('salary_range')} />
+            <Input id="salary_range" placeholder="Məs: 500-1000 AZN, Razılaşma ilə və s." {...register('salary_range')} />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="work_mode">İş rejimi</Label>
-            <Input id="work_mode" placeholder="Məs: Hibrid, Remote, Ofis" {...register('work_mode')} />
+            <Input id="work_mode" placeholder="Məs: Tam zamanlı, Ev, Ofis" {...register('work_mode')} />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="contact_info">Əlaqə məlumatları</Label>
-            <Input id="contact_info" placeholder="Məs: email@example.com, +994 50 123 45 67" {...register('contact_info')} />
+            <Label htmlFor="contact_info">Əlaqə nömrəsi</Label>
+            <Input id="contact_info" placeholder="Məs: +994 50 123 45 67" {...register('contact_info')} />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="application_form">Müraciət forması</Label>
-            <Textarea id="application_form" placeholder="Məs: CV-nizi göndərin email@example.com ünvanına" {...register('application_form')} />
+            <Textarea id="application_form" placeholder="Müraciət forması haqqında məlumat" {...register('application_form')} />
           </div>
           
           <DialogFooter>

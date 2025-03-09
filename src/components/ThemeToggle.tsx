@@ -23,9 +23,9 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
       className="flex items-center gap-1 text-foreground"
     >
       {theme === 'dark' ? (
-        <Sun className="w-4 h-4" />
+        <Sun className="w-4 h-4 text-yellow-300" />
       ) : (
-        <Moon className="w-4 h-4" />
+        <Moon className="w-4 h-4 text-blue-700" />
       )}
     </Button>
   );

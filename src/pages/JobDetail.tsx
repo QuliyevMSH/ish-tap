@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
-import { Edit, Trash2, Briefcase, MapPin, Building, DollarSign, Clock3, Phone, FileText, ArrowLeft, Loader2, Calendar, Heart, User } from 'lucide-react';
+import { Edit, Trash2, Briefcase, MapPin, Building, Banknote, Clock3, Phone, FileText, ArrowLeft, Loader2, Calendar, Heart, User } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import EditJobDialog from '@/components/EditJobDialog';
 import DeleteJobDialog from '@/components/DeleteJobDialog';
@@ -266,7 +266,7 @@ const JobDetail: React.FC = () => {
                 disabled={applicantsLoading}
               >
                 <Heart className={isApplied ? "fill-current" : ""} size={18} />
-                <span>{isApplied ? "İşi istəyirəm" : "İşi istəyirəm"}</span>
+                <span>{isApplied ? "İşə müraciət olundu" : "İşi istəyirəm"}</span>
               </Button>
             )}
             
@@ -318,33 +318,28 @@ const JobDetail: React.FC = () => {
                 
                 <div className="space-y-3">
                   <div className="flex items-center">
-                    <Building className="h-5 w-5 mr-2 text-gray-500" />
+                    <Building className="h-5 w-5 mr-2 text-violet-500" />
                     <span className="font-medium">{job?.company}</span>
                   </div>
                   
                   <div className="flex items-center">
-                    <MapPin className="h-5 w-5 mr-2 text-gray-500" />
+                    <MapPin className="h-5 w-5 mr-2 text-red-500" />
                     <span>{job?.location}</span>
                   </div>
                   
                   <div className="flex items-center">
-                    <Briefcase className="h-5 w-5 mr-2 text-gray-500" />
+                    <Briefcase className="h-5 w-5 mr-2 text-blue-500" />
                     <span>Təcrübə: {job?.experience_level || "Göstərilməyib"}</span>
                   </div>
                   
                   <div className="flex items-center">
-                    <DollarSign className="h-5 w-5 mr-2 text-gray-500" />
+                    <Banknote className="h-5 w-5 mr-2 text-green-500" />
                     <span>Maaş: {job?.salary_range || "Göstərilməyib"}</span>
                   </div>
                   
                   <div className="flex items-center">
-                    <Clock3 className="h-5 w-5 mr-2 text-gray-500" />
+                    <Clock3 className="h-5 w-5 mr-2 text-yellow-600" />
                     <span>İş rejimi: {job?.work_mode || "Göstərilməyib"}</span>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <Calendar className="h-5 w-5 mr-2 text-gray-500" />
-                    <span>Tarix: {formatDate(job?.created_at)}</span>
                   </div>
                 </div>
               </div>
@@ -361,7 +356,7 @@ const JobDetail: React.FC = () => {
                 <h2 className="text-lg font-semibold mb-2">Əlaqə məlumatları</h2>
                 <Separator className="mb-3" />
                 <div className="flex items-start">
-                  <Phone className="h-5 w-5 mr-2 text-gray-500 mt-0.5" />
+                  <Phone className="h-5 w-5 mr-2 text-green-500 mt-0.5" />
                   <p className="whitespace-pre-line">{job?.contact_info || "Əlaqə məlumatları göstərilməyib"}</p>
                 </div>
               </div>

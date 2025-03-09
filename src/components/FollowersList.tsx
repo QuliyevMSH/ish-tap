@@ -101,7 +101,7 @@ const FollowersList: React.FC<FollowersListProps> = ({
     if (!user) {
       toast({
         title: "Giriş edin",
-        description: "Təqib etmək üçün hesabınıza giriş edin",
+        description: "İzləmək üçün hesabınıza giriş edin",
         variant: "destructive",
       });
       return;
@@ -115,13 +115,13 @@ const FollowersList: React.FC<FollowersListProps> = ({
         if (result.success) {
           setFollowStates(prev => ({ ...prev, [profileId]: false }));
           toast({
-            title: "Təqib ləğv edildi",
-            description: "İstifadəçini artıq təqib etmirsiniz",
+            title: "İzləmə ləğv edildi",
+            description: "İstifadəçini artıq izləmirsiniz",
           });
         } else {
           toast({
             title: "Xəta baş verdi",
-            description: result.error || "Təqib ləğv edilmədi",
+            description: result.error || "İzləmə ləğv edilmədi",
             variant: "destructive",
           });
         }
@@ -130,13 +130,13 @@ const FollowersList: React.FC<FollowersListProps> = ({
         if (result.success) {
           setFollowStates(prev => ({ ...prev, [profileId]: true }));
           toast({
-            title: "Təqib edildi",
-            description: "İstifadəçini təqib edirsiniz",
+            title: "İzlənilir",
+            description: "İstifadəçini izləyirsiniz",
           });
         } else {
           toast({
             title: "Xəta baş verdi",
-            description: result.error || "Təqib əlavə olunmadı",
+            description: result.error || "İzləmə alınmadı",
             variant: "destructive",
           });
         }
@@ -145,7 +145,7 @@ const FollowersList: React.FC<FollowersListProps> = ({
       console.error("Follow/unfollow error:", error);
       toast({
         title: "Xəta baş verdi",
-        description: "Təqib zamanı xəta baş verdi",
+        description: "İzləmə zamanı xəta baş verdi",
         variant: "destructive",
       });
     } finally {
@@ -163,7 +163,7 @@ const FollowersList: React.FC<FollowersListProps> = ({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {listType === 'followers' ? 'Təqib edənlər' : 'Təqib edilənlər'}
+            {listType === 'followers' ? 'İzləyənlər' : 'İzlənilənlər'}
           </DialogTitle>
         </DialogHeader>
         
@@ -209,7 +209,7 @@ const FollowersList: React.FC<FollowersListProps> = ({
                       ) : (
                         <UserPlus className="w-4 h-4 mr-2" />
                       )}
-                      {followStates[profile.id] ? 'Təqib edilir' : 'Təqib et'}
+                      {followStates[profile.id] ? 'İzlənilir' : 'İzlə'}
                     </Button>
                   )}
                 </div>
@@ -217,7 +217,7 @@ const FollowersList: React.FC<FollowersListProps> = ({
             </div>
           ) : (
             <div className="text-center py-8 text-muted-foreground">
-              {listType === 'followers' ? 'Hələ heç bir təqibçi yoxdur' : 'Hələ heç kimi təqib etmir'}
+              {listType === 'followers' ? 'Hələ heç bir izləyici yoxdur' : 'Hələ heç kimi izləmir'}
             </div>
           )}
         </div>

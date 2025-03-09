@@ -71,8 +71,8 @@ const ProfileForm: React.FC = () => {
         return;
       }
       
-      if (value.length > 0 && value.length < 3) {
-        setUsernameError('İstifadəçi adı ən az 3 simvol olmalıdır');
+      if (value.length > 0 && value.length < 5) {
+        setUsernameError('İstifadəçi adı ən az 5 simvol olmalıdır');
       }
       
       // Check if username already exists (only if it has changed)
@@ -104,8 +104,8 @@ const ProfileForm: React.FC = () => {
     e.preventDefault();
     
     // Validate username
-    if (!formData.username || formData.username.length < 3) {
-      setUsernameError('İstifadəçi adı ən az 3 simvol olmalıdır');
+    if (!formData.username || formData.username.length < 5) {
+      setUsernameError('İstifadəçi adı ən az 5 simvol olmalıdır');
       return;
     }
     
@@ -263,18 +263,18 @@ const ProfileForm: React.FC = () => {
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="profession">İxtisas</Label>
+        <Label htmlFor="profession">İxtisas və ya Peşə</Label>
         <Input 
           id="profession" 
           name="profession"
           value={formData.profession || ''}
           onChange={handleChange}
-          placeholder="İxtisasınız" 
+          placeholder="İxtisasınız və ya peşəniz" 
         />
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="about">Haqqında</Label>
+        <Label htmlFor="about">Haqqımda</Label>
         <Textarea 
           id="about" 
           name="about"

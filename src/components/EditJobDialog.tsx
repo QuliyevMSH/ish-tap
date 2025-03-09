@@ -144,7 +144,7 @@ const EditJobDialog: React.FC<EditJobDialogProps> = ({
               name="work_mode"
               value={formData.work_mode}
               onChange={handleChange}
-              placeholder="Məs: Tam zamanlı, Hibrid, Uzaqdan və s."
+              placeholder="Məs: Tam zamanlı, Ev, Ofis və s."
             />
           </div>
           
@@ -161,13 +161,13 @@ const EditJobDialog: React.FC<EditJobDialogProps> = ({
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="contact_info">Əlaqə məlumatları</Label>
+            <Label htmlFor="contact_info">Əlaqə nömrəsi</Label>
             <Textarea
               id="contact_info"
               name="contact_info"
               value={formData.contact_info}
               onChange={handleChange}
-              placeholder="Email, telefon nömrəsi və s."
+              placeholder="Məs: +994 50 123 45 67"
               rows={3}
             />
           </div>

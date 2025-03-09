@@ -231,8 +231,8 @@ const Profile: React.FC = () => {
               onClick={signOut}
               disabled={authLoading}
             >
-              <LogOut className="w-4 h-4" />
-              <span>Çıxış</span>
+              <LogOut className="w-4 h-4 text-red-700" />
+              <span className="text-red-800">Çıxış</span>
             </Button>
           </div>
         )}
@@ -343,7 +343,7 @@ const Profile: React.FC = () => {
             <TabsTrigger value="profile">Profil məlumatları</TabsTrigger>
           )}
           <TabsTrigger value="jobs">İş elanları</TabsTrigger>
-          <TabsTrigger value="workers">İşçi profili</TabsTrigger>
+          <TabsTrigger value="workers">İşçi elanları</TabsTrigger>
         </TabsList>
         
         {!isViewingOtherProfile && (
@@ -409,7 +409,7 @@ const Profile: React.FC = () => {
             <CardContent className="pt-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold text-foreground">
-                  {isViewingOtherProfile ? "İstifadəçinin işçi profili" : "İşçi profilim"}
+                  {isViewingOtherProfile ? "İstifadəçinin işçi elanları" : "İşçi elanlarım"}
                 </h2>
               </div>
               
@@ -433,7 +433,7 @@ const Profile: React.FC = () => {
                 </div>
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
-                  {isViewingOtherProfile ? "İstifadəçi hələ işçi profili yaratmayıb" : "Hələ işçi profili yaratmamısınız"}
+                  {isViewingOtherProfile ? "İstifadəçi hələ işçi elanı yaratmayıb" : "Hələ işçi elanı yaratmamısınız"}
                 </div>
               )}
             </CardContent>

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { Briefcase, Clock, MapPin, DollarSign, Clock3, Building, User } from 'lucide-react';
+import { Briefcase, Clock, MapPin, Banknote, Clock3, Building, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface JobListItemProps {
@@ -65,7 +65,7 @@ const JobListItem: React.FC<JobListItemProps> = ({
               
               {salary_range && (
                 <div className="flex items-center text-muted-foreground text-sm">
-                  <DollarSign className="w-4 h-4 mr-1 text-accent-foreground" />
+                  <Banknote className="w-4 h-4 mr-1 text-green-600" />
                   <span>{salary_range}</span>
                 </div>
               )}
@@ -80,7 +80,7 @@ const JobListItem: React.FC<JobListItemProps> = ({
             
             <div className="flex items-center justify-between">
               <div className="flex items-center text-muted-foreground text-sm">
-                <Clock className="w-4 h-4 mr-1" />
+                <Clock className="w-4 h-4 mr-1 text-yellow-600" />
                 <span>{postedTime}</span>
               </div>
               

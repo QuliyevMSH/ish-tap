@@ -43,7 +43,7 @@ const JobApplicants: React.FC<JobApplicantsProps> = ({
       <Dialog open={showAllApplicants} onOpenChange={onOpenChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>İşi istəyənlərin siyahısı</DialogTitle>
+            <DialogTitle>İşi axtaranların siyahısı</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 mt-4">
             {applicants.map((profile) => (

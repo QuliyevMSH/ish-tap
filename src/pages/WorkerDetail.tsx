@@ -38,8 +38,8 @@ const WorkerDetail: React.FC = () => {
         }
       } else {
         toast({
-          title: "İşçi profili tapılmadı",
-          description: "Axtardığınız işçi profili mövcud deyil və ya silinib",
+          title: "İşçi elanı tapılmadı",
+          description: "Axtardığınız işçi elanı mövcud deyil və ya silinib",
           variant: "destructive",
         });
         navigate('/jobs');
@@ -80,14 +80,14 @@ const WorkerDetail: React.FC = () => {
       
       if (result.success) {
         toast({
-          title: "Profil silindi",
-          description: "İşçi profili uğurla silindi",
+          title: "Elan silindi",
+          description: "İşçi elanı uğurla silindi",
         });
         navigate('/profile');
       } else {
         toast({
           title: "Xəta baş verdi",
-          description: result.error || "Profil silinərkən xəta baş verdi",
+          description: result.error || "Elan silinərkən xəta baş verdi",
           variant: "destructive",
         });
       }
@@ -95,7 +95,7 @@ const WorkerDetail: React.FC = () => {
       console.error('Error deleting worker profile:', error);
       toast({
         title: "Xəta baş verdi",
-        description: "Profil silinərkən xəta baş verdi",
+        description: "Elan silinərkən xəta baş verdi",
         variant: "destructive",
       });
     }
@@ -108,8 +108,8 @@ const WorkerDetail: React.FC = () => {
     if (updatedWorker) {
       setWorker(updatedWorker);
       toast({
-        title: "Profil yeniləndi",
-        description: "İşçi profili uğurla yeniləndi",
+        title: "Elan yeniləndi",
+        description: "İşçi elanı uğurla yeniləndi",
       });
     }
   };
@@ -125,7 +125,7 @@ const WorkerDetail: React.FC = () => {
   if (!worker) {
     return (
       <div className="page-container text-center py-12">
-        <p className="text-gray-500 mb-4">İşçi profili tapılmadı</p>
+        <p className="text-gray-500 mb-4">İşçi elanı tapılmadı</p>
         <Button onClick={handleBack} variant="outline">Geri qayıt</Button>
       </div>
     );
@@ -180,23 +180,18 @@ const WorkerDetail: React.FC = () => {
                     className="flex items-center cursor-pointer hover:text-primary transition-colors"
                     onClick={navigateToUserProfile}
                   >
-                    <User className="h-5 w-5 mr-2 text-gray-500" />
+                    <User className="h-5 w-5 mr-2 text-violet-500" />
                     <span className="font-medium underline">{`${worker.name} ${worker.surname}`}</span>
                   </div>
                   
                   <div className="flex items-center">
-                    <Briefcase className="h-5 w-5 mr-2 text-gray-500" />
+                    <Briefcase className="h-5 w-5 mr-2 text-blue-500" />
                     <span>{worker.profession}</span>
                   </div>
                   
                   <div className="flex items-center">
-                    <MapPin className="h-5 w-5 mr-2 text-gray-500" />
+                    <MapPin className="h-5 w-5 mr-2 text-red-500" />
                     <span>{worker.location}</span>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <Calendar className="h-5 w-5 mr-2 text-gray-500" />
-                    <span>Qeydiyyat tarixi: {formatDate(worker.created_at)}</span>
                   </div>
                 </div>
               </div>
@@ -217,7 +212,7 @@ const WorkerDetail: React.FC = () => {
             
             <div>
               <div>
-                <h2 className="text-lg font-semibold mb-2">Profil məlumatları</h2>
+                <h2 className="text-lg font-semibold mb-2">Elan məlumatları</h2>
                 <Separator className="mb-3" />
                 <p className="text-sm text-gray-500">
                   Paylaşılma tarixi: {formatDate(worker.created_at)}
@@ -232,9 +227,9 @@ const WorkerDetail: React.FC = () => {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>İşçi profilini sil</AlertDialogTitle>
+            <AlertDialogTitle>İşçi elanını sil</AlertDialogTitle>
             <AlertDialogDescription>
-              Bu əməliyyat geri qaytarıla bilməz. İşçi profilinizi silmək istədiyinizə əminsiniz?
+              Bu əməliyyat geri qaytarıla bilməz. İşçi elanını silmək istədiyinizə əminsiniz?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

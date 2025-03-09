@@ -117,7 +117,7 @@ const Jobs: React.FC = () => {
               className="flex items-center"
             >
               <Plus className="w-4 h-4 mr-1" />
-              Yeni elan
+              Yeni iş elanı
             </Button>
           )}
         </div>

@@ -69,7 +69,7 @@ const EditWorkerDialog: React.FC<EditWorkerDialogProps> = ({
     } else {
       toast({
         title: "Xəta baş verdi",
-        description: error || "İşçi profili yenilənərkən xəta baş verdi",
+        description: error || "İşçi elanı yenilənərkən xəta baş verdi",
         variant: "destructive",
       });
     }
@@ -81,7 +81,7 @@ const EditWorkerDialog: React.FC<EditWorkerDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>İşçi profilini redaktə et</DialogTitle>
+          <DialogTitle>İşçi elanını redaktə et</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 py-4">

@@ -81,7 +81,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ trigger, className }) => {
             size="icon" 
             className={className}
           >
-            <SearchIcon className="h-5 w-5" />
+            <SearchIcon className="h-5 w-5 text-blue-600" />
           </Button>
         )}
       </DialogTrigger>
@@ -106,7 +106,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ trigger, className }) => {
               className="px-3 py-2" 
               onClick={clearSearch}
             >
-              <X className="h-4 w-4 opacity-50" />
+              <X className="h-4 w-4 opacity-50 text-red-600" />
             </Button>
           )}
         </div>

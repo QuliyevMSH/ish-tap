@@ -39,7 +39,7 @@ const Workers: React.FC = () => {
       setWorkers(data);
     } catch (error) {
       console.error("Error fetching workers:", error);
-      setError("İşçilər yüklənərkən xəta baş verdi.");
+      setError("İşçi elanları yüklənərkən xəta baş verdi.");
     } finally {
       setIsLoading(false);
     }
@@ -65,8 +65,8 @@ const Workers: React.FC = () => {
   };
 
   const tabs = [
-    { id: 'all', label: 'Bütün işçilər' },
-    { id: 'my', label: 'Mənim profillərim' }
+    { id: 'all', label: 'Bütün işçi elanları' },
+    { id: 'my', label: 'Mənim elanlarım' }
   ];
 
   const formatDate = (dateString: string) => {
@@ -117,7 +117,7 @@ const Workers: React.FC = () => {
               className="flex items-center"
             >
               <Plus className="w-4 h-4 mr-1" />
-              İşçi profili yarat
+              Yeni işçi elanı
             </Button>
           )}
         </div>
@@ -153,7 +153,7 @@ const Workers: React.FC = () => {
           {user && (
             <Button onClick={handleAddWorker}>
               <Plus className="w-4 h-4 mr-2" />
-              İşçi profili yarat
+              İşçi elanı yarat
             </Button>
           )}
         </div>

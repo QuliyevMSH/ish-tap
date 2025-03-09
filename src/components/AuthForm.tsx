@@ -45,8 +45,8 @@ const AuthForm: React.FC = () => {
         return false;
       }
       
-      if (formData.username.length < 3) {
-        setUsernameError('İstifadəçi adı ən az 3 simvol olmalıdır');
+      if (formData.username.length < 5) {
+        setUsernameError('İstifadəçi adı ən az 5 simvol olmalıdır');
         return false;
       }
       

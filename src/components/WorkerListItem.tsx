@@ -43,7 +43,7 @@ const WorkerListItem: React.FC<WorkerListItemProps> = ({
               </div>
               
               <div className="flex items-center text-muted-foreground text-sm">
-                <Clock className="w-4 h-4 mr-1" />
+                <Clock className="w-4 h-4 mr-1 text-yellow-600" />
                 <span>{postedTime}</span>
               </div>
             </div>

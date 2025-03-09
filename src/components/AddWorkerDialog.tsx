@@ -65,7 +65,7 @@ const AddWorkerDialog: React.FC<AddWorkerDialogProps> = ({
     if (success) {
       toast({
         title: "Uğurlu",
-        description: "İşçi profili uğurla yaradıldı",
+        description: "İşçi elanı uğurla yaradıldı",
       });
       
       // Reset form
@@ -82,7 +82,7 @@ const AddWorkerDialog: React.FC<AddWorkerDialogProps> = ({
     } else {
       toast({
         title: "Xəta baş verdi",
-        description: error || "İşçi profili yaradılarkən xəta baş verdi",
+        description: error || "İşçi elanı yaradılarkən xəta baş verdi",
         variant: "destructive",
       });
     }
@@ -94,7 +94,7 @@ const AddWorkerDialog: React.FC<AddWorkerDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>İşçi profili əlavə et</DialogTitle>
+          <DialogTitle>Yeni işçi elanı əlavə et</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 py-4">

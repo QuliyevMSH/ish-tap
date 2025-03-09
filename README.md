@@ -1,69 +1,61 @@
-# Welcome to your Lovable project
+İş Tap - İşsiz Qalma!
 
-## Project info
 
-**URL**: https://lovable.dev/projects/29c226bf-6120-47aa-a9d2-7ac2cb232617
+İş Tap iş axtaranlarla işəgötürənləri bir araya gətirən yenilikçi platformadır.
+Məqsədimiz iş axtaranlar üçün sürətli və effektiv iş tapmaq imkanlarını artırmaq, işəgötürənlər üçün isə uyğun namizədləri rahat şəkildə tapmaqdır.
 
-## How can I edit this code?
+·
 
-There are several ways of editing your application.
+🚀 Xüsusiyyətlər:
 
-**Use Lovable**
+📌 İş Elanları – Müxtəlif kateqoriyalarda ən son iş elanlarını araşdırın.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/29c226bf-6120-47aa-a9d2-7ac2cb232617) and start prompting.
+🔍 Axtarış və Filtrləmə – Axtardığınız işi kateqoriya, şəhər və maaş aralığına görə süzgəcdən keçirin.
 
-Changes made via Lovable will be committed automatically to this repo.
+👨‍💼 CV Yerləşdirin – Öz CV-nizi əlavə edin və işəgötürənlərin sizi tapmasına imkan yaradın.
 
-**Use your preferred IDE**
+📢 İşəgötürənlər üçün – Şirkətinizə uyğun namizədləri tez bir zamanda tapın.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+📱 Mobil Uyğunluq – Hər yerdən rahat iş axtarışı imkanı.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+·
 
-Follow these steps:
+🛠 Texnologiyalar
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Bu layihə aşağıdakı texnologiyalardan istifadə etməklə hazırlanmışdır:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Frontend: React, Next.js, Tailwind CSS
 
-# Step 3: Install the necessary dependencies.
-npm i
+Backend: SupaBase
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+Verilənlər Bazası: SupaBase
 
-**Edit a file directly in GitHub**
+Autentifikasiya: SupaBase
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+·
 
-**Use GitHub Codespaces**
+📌 Necə İstifadə Etmək Olar?
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Qeydiyyatdan keçin və ya daxil olun.
 
-## What technologies are used for this project?
+İş elanlarına baxın və uyğun elanları seçin.
 
-This project is built with .
+CV-nizi yükləyin və işə müraciət edin.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+İşəgötürənlər namizədləri dəyərləndirib sizinlə əlaqə saxlasın.
 
-## How can I deploy this project?
+·
 
-Simply open [Lovable](https://lovable.dev/projects/29c226bf-6120-47aa-a9d2-7ac2cb232617) and click on Share -> Publish.
+💡 Töhfə vermək
 
-## I want to use a custom domain - is that possible?
+Platformanı daha da inkişaf etdirmək istəyirsinizsə, töhfələrinizi qəbul edirik! Pull request-lər və bug report-lar üçün bizim GitHub Repository-mizə baxa bilərsiniz.
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+·
+
+📞 Əlaqə
+
+📧 Email: Quliyemasallah96@gmail.com
+
+🌍 Website: ishtap.netlify.app
+
+🚀 İş Tap - İşsiz Qalma! platformasında siz də öz arzularınızdakı işi tapın! 🎯
