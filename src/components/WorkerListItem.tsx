@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { User, MapPin, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
 interface WorkerListItemProps {
   id: string;
   name: string;
@@ -11,6 +13,7 @@ interface WorkerListItemProps {
   location: string;
   postedTime: string;
 }
+
 const WorkerListItem: React.FC<WorkerListItemProps> = ({
   id,
   name,
@@ -23,7 +26,12 @@ const WorkerListItem: React.FC<WorkerListItemProps> = ({
   const handleClick = () => {
     navigate(`/workers/${id}`);
   };
-  return <Card className="mb-3 overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer border-border/40 dark:border-border/30" onClick={handleClick}>
+  
+  return (
+    <Card 
+      className="mb-3 overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer border-border/40 dark:border-border/30" 
+      onClick={handleClick}
+    >
       <div className="p-4 border-none dark:border-white border-[0.5px] rounded-[20px]">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
@@ -31,9 +39,15 @@ const WorkerListItem: React.FC<WorkerListItemProps> = ({
             <p className="text-muted-foreground mb-2">{profession}</p>
             
             <div className="flex flex-wrap gap-2 mb-3">
-              {skills.map((skill, index) => <Badge key={index} variant="outline" className="font-normal bg-secondary/10 text-secondary-foreground border-secondary/20 hover:bg-secondary/20">
+              {skills.map((skill, index) => (
+                <Badge 
+                  key={index} 
+                  variant="outline" 
+                  className="font-normal bg-secondary/10 text-secondary-foreground border-secondary/20 hover:bg-secondary/20"
+                >
                   {skill}
-                </Badge>)}
+                </Badge>
+              ))}
             </div>
             
             <div className="flex flex-wrap gap-y-2">
@@ -54,6 +68,8 @@ const WorkerListItem: React.FC<WorkerListItemProps> = ({
           </div>
         </div>
       </div>
-    </Card>;
+    </Card>
+  );
 };
+
 export default WorkerListItem;

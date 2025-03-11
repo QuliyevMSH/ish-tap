@@ -177,11 +177,11 @@ const WorkerDetail: React.FC = () => {
                 
                 <div className="space-y-3">
                   <div 
-                    className="flex items-center cursor-pointer hover:text-primary transition-colors"
+                    className="flex items-center cursor-pointer hover:text-primary bg-secondary/10 rounded-full py-1.5 px-3 w-fit hover:shadow-sm hover:bg-secondary/20 transition-all duration-300"
                     onClick={navigateToUserProfile}
                   >
                     <User className="h-5 w-5 mr-2 text-violet-500" />
-                    <span className="font-medium underline">{`${worker.name} ${worker.surname}`}</span>
+                    <span className="font-medium">{`${worker.name} ${worker.surname}`}</span>
                   </div>
                   
                   <div className="flex items-center">
@@ -201,7 +201,7 @@ const WorkerDetail: React.FC = () => {
                 <Separator className="mb-3" />
                 <div className="flex flex-wrap gap-2">
                   {worker.skills.map((skill, index) => (
-                    <Badge key={index} variant="secondary" className="font-normal text-sm py-1">
+                    <Badge key={index} variant="secondary" className="font-normal text-sm py-1 hover:scale-105 transition-transform duration-300">
                       <Lightbulb className="w-3 h-3 mr-1" />
                       {skill}
                     </Badge>
